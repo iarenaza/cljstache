@@ -1,4 +1,4 @@
-(defproject cljstache "2.0.5-SNAPSHOT"
+(defproject cljstache "2.0.5"
   :min-lein-version "2.5.2"
   :description "{{ mustache }} for Clojure[Script]"
   :url "http://github.com/fotoetienne/cljstache"
