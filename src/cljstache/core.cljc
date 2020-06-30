@@ -1,6 +1,7 @@
 (ns cljstache.core
   "A parser for mustache templates."
-  #?(:clj (:refer-clojure :exclude (seqable?)))
+  #?(:clj (:refer-clojure :exclude (seqable?))
+     :cljs (:refer-clojure :exclude [re-find]))
   (:require #?(:clj [clojure.java.io :as io])
             [clojure.string :as str :refer [split]]))
 
@@ -279,7 +280,9 @@
 (defn- find-section-end-tag
   "Find the matching end tag for a section at the specified level,
    starting to search at index."
-  [^String template ^long index ^long level]
+  [^String template
+   #?(:clj ^long index :cljs index)
+   #?(:clj ^long level :cljs level)]
   (let [next-start (find-section-start-tag template index)
         next-end (next-index template #"\{\{/[^\}]*\}\}" index)]
     (if (= next-end -1)
@@ -293,7 +296,8 @@
 (defn- extract-section
   "Extracts the outer section from the template."
   [^String template]
-  (let [^Long start (find-section-start-tag template 0)]
+  (let [#?(:clj ^Long start :cljs start)
+        (find-section-start-tag template 0)]
     (when (not= start -1)
       (let [inverted (= (str (.charAt template (+ start 2))) "^")
             ^Long end-tag (find-section-end-tag template (+ start 3) 1)]
