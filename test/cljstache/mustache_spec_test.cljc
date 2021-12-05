@@ -57,7 +57,7 @@
            (render template data partials))
         (str (:name spec-test) " - " (:desc spec-test) "\nTemplate: \""
              (flatten-string template) "\"\nData: " readable-data
-             (if partials (str "\nPartials: " partials))))))
+             (when partials (str "\nPartials: " partials))))))
 
 (defn run-spec-tests [spec]
   (doseq [spec-test (spec-tests spec)]
