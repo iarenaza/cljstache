@@ -22,7 +22,7 @@
              (instance? clojure.lang.Seqable x)
              (nil? x)
              (instance? Iterable x)
-             (-> x .getClass .isArray)
+             (-> ^Object x .getClass .isArray)
              (string? x)
              (instance? java.util.Map x))))))
 
