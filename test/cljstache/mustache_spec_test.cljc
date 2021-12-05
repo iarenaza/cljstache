@@ -14,7 +14,7 @@
 
 (def specs ["comments" "delimiters" "interpolation" "sections" "inverted" "partials" "~lambdas"])
 
-(defn- spec-path [spec] (str "test-resources/spec/specs/" spec ".json"))
+#?(:clj (defn- spec-path [spec] (str "test-resources/spec/specs/" spec ".json")))
 
 #?(:clj (defn- load-spec-tests [spec]
           (-> spec spec-path slurp json/read-json :tests)))
