@@ -39,5 +39,5 @@
   :cljsbuild {:builds
               {:test {:source-paths ["src" "test"]
                       :compiler {:output-to "target/unit-test.js"
-                                 :main 'cljstache.runner
+                                 :main cljstache.runner
                                  :optimizations :whitespace}}}})
