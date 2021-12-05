@@ -21,7 +21,7 @@
                     :plugins [[lein-cljsbuild "1.1.7"]
                               [lein-doo "0.1.10"]]}}
 
-  :aliases {"with-clj" ["with-profile" "dev:dev,1.7:dev,1.8:dev,1.9"]
+  :aliases {"with-clj" ["with-profile" "dev:dev,1.7:dev,1.8:dev,1.9:dev,1.10"]
             "with-cljs" ["with-profile" "cljs"]
             "test-clj" ["with-clj" "test"]
             "test-cljs" ["with-cljs" "doo" "nashorn" "test" "once"]
