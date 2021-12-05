@@ -2,11 +2,11 @@
   "Test against the [Mustache spec](http://github.com/mustache/spec)"
   (:require [cljstache.core :refer [render]]
             [clojure.string :as str]
-            ;; #?(:cljs [cljs.tools.reader :refer [read-string]])
-            ;; #?(:cljs [cljs.js :refer [empty-state js-eval]])
-            #?(:clj [clojure.test :refer :all])
-            #?(:cljs [cljs.test :refer-macros [deftest testing is]])
-            #?(:clj [clojure.data.json :as json]))
+            #?(:clj [clojure.data.json :as json])
+            #?(:clj [clojure.edn :as edn])
+            #?(:clj [clojure.java.io :as io])
+            #?(:clj [clojure.test :refer [deftest is]])
+            #?(:cljs [cljs.test :refer-macros [deftest is]]))
   #?(:cljs (:require-macros [cljstache.mustache-spec-test :refer [load-specs]])))
 
 ;; We load the specs at compile time via macro
@@ -19,8 +19,29 @@
 #?(:clj (defn- load-spec-tests [spec]
           (-> spec spec-path slurp json/read-json :tests)))
 
+#?(:clj (defn- read-lambda [^String lambda-str]
+          (let [lambda-str-reader (io/reader (.getBytes lambda-str "UTF-8"))
+                in (java.io.PushbackReader. lambda-str-reader)]
+            (loop [forms []]
+              (let [form (edn/read {:eof nil} in)]
+                (if (nil? form)
+                  (if (> (count forms) 1)
+                    (reverse (into '(do) forms))
+                    (first forms))
+                  (recur (conj forms form))))))))
+
+#?(:clj (defn- build-lambda [test]
+          (update-in test [:data :lambda :clojure]
+                     (fn [lambda-str]
+                       {:readable-lambda lambda-str
+                        :lambda-fn (read-lambda lambda-str)}))))
+
 #?(:clj (defmacro load-specs []
-          (into {} (for [spec specs] [spec (load-spec-tests spec)]))))
+          (into {} (for [spec specs]
+                     (let [tests (load-spec-tests spec)]
+                       (if (= spec "~lambdas")
+                         [spec (mapv build-lambda tests)]
+                         [spec tests]))))))
 
 (def spec-tests (load-specs))
 
@@ -30,20 +51,10 @@
     data))
 
 (defn- extract-lambdas [data]
-  (update-lambda-in data #(:clojure %)))
-
-#?(:cljs (defn load-string [s] s
-         #_(:value
-            (when-let [f (read-string s)]
-              (cljs.js/eval (cljs.js/empty-state)
-                            f
-                            {:eval js-eval
-                             :source-map true
-                             :context :expr}
-                            (fn [x] (println x) x))))))
+  (update-lambda-in data #(-> % :clojure :readable-lambda)))
 
 (defn- load-lambdas [data]
-  (update-lambda-in data #(load-string %)))
+  (update-lambda-in data #(-> % :clojure :lambda-fn)))
 
 (defn- flatten-string [^String s]
   (str/replace (str/replace s "\n" "\\\\n") "\r" "\\\\r"))
@@ -51,7 +62,7 @@
 (defn run-spec-test [spec-test]
   (let [template (:template spec-test)
         readable-data (extract-lambdas (:data spec-test))
-        data (load-lambdas readable-data)
+        data (load-lambdas (:data spec-test))
         partials (:partials spec-test)]
     (is (= (:expected spec-test)
            (render template data partials))
@@ -81,7 +92,5 @@
 (deftest test-partials
   (run-spec-tests "partials"))
 
-;; Unable to load the labdas in cljs due to eval issues
-#?(:clj
-   (deftest test-lambdas
-     (run-spec-tests "~lambdas")))
+(deftest test-lambdas
+  (run-spec-tests "~lambdas"))
