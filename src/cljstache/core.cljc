@@ -256,7 +256,7 @@
               matcher (re-matcher regex s)]
           (if (nil? (re-find matcher))
             -1
-            (+ index (.start (.toMatchResult matcher)))))))))
+            (+ index (.start matcher))))))))
 
 #?(:cljs
    (defn- next-index
