@@ -1,5 +1,5 @@
 (defproject cljstache "2.0.7-SNAPSHOT"
-  :min-lein-version "2.5.2"
+  :min-lein-version "2.9.8"
   :description "{{ mustache }} for Clojure[Script]"
   :url "http://github.com/fotoetienne/cljstache"
   :license {:name "GNU Lesser General Public License 2.1"
@@ -9,19 +9,20 @@
 
   :dependencies []
 
-  :profiles {:dev {:dependencies [[org.clojure/clojure "1.8.0"]
-                                  [org.clojure/data.json "0.2.6"]]
+  :profiles {:dev {:dependencies [[org.clojure/clojure "1.11.0"]
+                                  [org.clojure/data.json "2.4.0"]]
                    :resource-paths ["test-resources"]}
              :1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}
              :1.8 {:dependencies [[org.clojure/clojure "1.8.0"]]}
              :1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}
-             :1.10 {:dependencies [[org.clojure/clojure "1.10.1"]]}
-             :cljs {:dependencies [[org.clojure/clojure "1.10.1"]
-                                   [org.clojure/clojurescript "1.10.520"]]
-                    :plugins [[lein-cljsbuild "1.1.7"]
-                              [lein-doo "0.1.10"]]}}
+             :1.10 {:dependencies [[org.clojure/clojure "1.10.3"]]}
+             :1.11 {:dependencies [[org.clojure/clojure "1.11.0"]]}
+             :cljs {:dependencies [[org.clojure/clojure "1.11.0"]
+                                   [org.clojure/clojurescript "1.11.4"]]
+                    :plugins [[lein-cljsbuild "1.1.8"]
+                              [lein-doo "0.1.11"]]}}
 
-  :aliases {"with-clj" ["with-profile" "dev:dev,1.7:dev,1.8:dev,1.9:dev,1.10"]
+  :aliases {"with-clj" ["with-profile" "dev:dev,1.7:dev,1.8:dev,1.9:dev,1.10:dev,1.11"]
             "with-cljs" ["with-profile" "cljs"]
             "test-clj" ["with-clj" "test"]
             "test-cljs" ["with-cljs" "doo" "nashorn" "test" "once"]
