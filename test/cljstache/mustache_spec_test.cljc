@@ -47,7 +47,7 @@
 
 (defn- update-lambda-in [data f]
   (if (contains? data :lambda)
-    (update-in data [:lambda] f)
+    (update data :lambda f)
     data))
 
 (defn- extract-lambdas [data]

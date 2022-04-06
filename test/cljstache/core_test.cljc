@@ -1,5 +1,6 @@
 (ns cljstache.core-test
   (:require
+   [clojure.string :as str]
    #?(:clj  [clojure.test :refer :all]
       :cljs [cljs.test :refer-macros [deftest testing is]])
    #?(:clj [cljstache.core :as cs :refer [render render-resource]])
@@ -30,7 +31,7 @@
 
 (deftest re-groups-test
   (let [matcher (re-matcher #"(\d)" "ab1cd3")
-        match (re-find matcher)]
+        _ (re-find matcher)]
     (is (= ["1" "1"] (vec (re-groups matcher))))))
 
 (deftest matcher-find-test
@@ -245,7 +246,7 @@
   (is (= "Hi TOM Hi BOB "
          (render "{{#people}}Hi {{#upper}}{{name}}{{/upper}} {{/people}}"
                  {:people [{:name "Tom"}, {:name "Bob"}]
-                  :upper (fn [text] (fn [render-fn] (clojure.string/upper-case (render-fn text))))}))))
+                  :upper (fn [text] (fn [render-fn] (str/upper-case (render-fn text))))}))))
 
 ;; Not implemented for cljs
 #?(:clj

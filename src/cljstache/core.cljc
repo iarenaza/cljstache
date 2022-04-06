@@ -201,13 +201,12 @@
                                                      "\\s*#\\s*(.*?)\\s*"
                                                      @close-delim))
                                                (first tag))
-                        key (if section-start (keyword (second section-start)))
-                        value (if key (key @data))]
-                    (if (and value (fn? value)
-                             (not (and (= @open-delim "\\{\\{")
-                                       (= @close-delim "\\}\\}"))))
+                        k (when section-start (keyword (second section-start)))
+                        v (when k (k @data))]
+                    (when (and v (fn? v)
+                               (not (and (= @open-delim "\\{\\{")
+                                         (= @close-delim "\\}\\}"))))
                       (swap! data
-                             #(update-in % [key]
                                          (fn [old]
                                            (fn [data]
                                              (str "{{="
@@ -216,6 +215,7 @@
                                                   (unescape-regex @close-delim)
                                                   "=}}"
                                                   (old data)))))))
+                             #(update % k
                     (sb-replace builder match-start match-end
                               (str "{{" (second tag) "}}"))
                     (recur (int match-end))))))))))
@@ -266,7 +266,7 @@
       (if (= index -1)
         -1
         (let [s (subs section index)
-              matcher (js/RegExp. (.-source (str regex)) "g")]
+              _ (js/RegExp. (.-source (str regex)) "g")]
           (if-let [m (.exec regex s)]
             (+ index (.-index m))
             -1))))))
@@ -382,10 +382,10 @@
                                            (if (= element element-to-invert)
                                              "^" "#"))
                                   element "}}"))
-          (if (not (nil? tail-builder))
+          (when (not (nil? tail-builder))
             (sb-insert tail-builder 0 (str "{{/" element "}}"))))
         (sb-append builder (str open-delim (last elements) close-delim))
-        (str (sb->str builder) (if (not (nil? tail-builder))
+        (str (sb->str builder) (when (not (nil? tail-builder))
                                  (sb->str tail-builder)))))))
 
 (defn- convert-paths
@@ -441,10 +441,10 @@
   [section data partials]
   (let [section-data ((keyword (:name section)) data)]
     (if (:inverted section)
-      (if (or (and (seqable? section-data) (empty? section-data))
-              (not section-data))
+      (when (or (and (seqable? section-data) (empty? section-data))
+                (not section-data))
         (:body section))
-      (if section-data
+      (when section-data
         (if (fn? section-data)
           (let [result (section-data (:body section))]
             (if (fn? result)
@@ -482,7 +482,7 @@
 (defn tags
   "Returns set of all tags in template"
   [template]
-  (let [[^String template data] (preprocess template {} {})
+  (let [[^String template] (preprocess template {} {})
         matches (re-seq #"\{\{(\{|\&|\>|)\s*(.*?)\s*\}{2,3}" template)
         tags (map (comp keyword last) matches)]
     (set tags)))
