@@ -27,7 +27,7 @@
              :1.10 {:dependencies [[org.clojure/clojure "1.10.3"]]}
              :1.11 {:dependencies [[org.clojure/clojure "1.11.0"]]}
              :cljs {:dependencies [[org.clojure/clojure "1.11.0"]
-                                   [org.clojure/clojurescript "1.11.4"]]
+                                   [org.clojure/clojurescript "1.10.597"]]
                     :plugins [[lein-cljsbuild "1.1.8"]
                               [lein-doo "0.1.11"]]}}
 
