@@ -112,10 +112,11 @@
   #?(:clj ([^String s] (StringBuilder. s)))
   #?(:cljs ([s] (atom s))))
 
-(defn- sb!
-  "Perform mutation on stringbuilder object"
-  [s f]
-  (swap! s f) s)
+#?(:cljs
+   (defn- sb!
+     "Perform mutation on stringbuilder object"
+     [s f]
+     (swap! s f) s))
 
 (defn- ^String sb->str [^StringBuilder s]
   #?(:clj (.toString s))
