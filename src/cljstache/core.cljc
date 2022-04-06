@@ -34,7 +34,7 @@
   [f coll]
   (apply str (map f coll)))
 
-; To match clj regex api
+;; To match clj regex api
 #?(:cljs
    (defn re-matcher [pattern s]
      [(re-pattern pattern) s]))
@@ -148,7 +148,7 @@
   (re-matcher
    (re-pattern (str "(" open ".*?" close
                     (when (not= "\\{\\{" open)
-                        (str "|\\{\\{.*?\\}\\}"))
+                      (str "|\\{\\{.*?\\}\\}"))
                     ")"))
    s))
 
@@ -195,9 +195,9 @@
                   (sb-delete builder match-start match-end)
                   (recur (int match-start)))
                 (when-let [tag (re-find
-                              (re-pattern (str @open-delim "(.*?)"
-                                               @close-delim))
-                              match)]
+                                (re-pattern (str @open-delim "(.*?)"
+                                                 @close-delim))
+                                match)]
                   (let [section-start (re-find (re-pattern
                                                 (str "^"
                                                      @open-delim
@@ -210,17 +210,17 @@
                                (not (and (= @open-delim "\\{\\{")
                                          (= @close-delim "\\}\\}"))))
                       (swap! data
-                                         (fn [old]
-                                           (fn [data]
-                                             (str "{{="
-                                                  (unescape-regex @open-delim)
-                                                  " "
-                                                  (unescape-regex @close-delim)
-                                                  "=}}"
-                                                  (old data)))))))
                              #(update % k
+                                      (fn [old]
+                                        (fn [data]
+                                          (str "{{="
+                                               (unescape-regex @open-delim)
+                                               " "
+                                               (unescape-regex @close-delim)
+                                               "=}}"
+                                               (old data)))))))
                     (sb-replace builder match-start match-end
-                              (str "{{" (second tag) "}}"))
+                                (str "{{" (second tag) "}}"))
                     (recur (int match-end))))))))))
     [(sb->str builder) @data]))
 
@@ -313,7 +313,7 @@
                        ""
                        (subs section body-start body-end))
                 section-name (.trim (subs section 3
-                                                (.indexOf section "}}")))]
+                                          (.indexOf section "}}")))]
             (Section. section-name body start end inverted)))))))
 
 (defn- replace-all-callback
@@ -472,7 +472,7 @@
   [^String template data partials skip-delimiter-preprocess?]
   (let [[^String template data] (if skip-delimiter-preprocess?
                                   [template data]
-                                  (delimiter-preprocess template data ))
+                                  (delimiter-preprocess template data))
         ^String section (extract-section template)]
     (if (nil? section)
       (replace-variables template data partials)
@@ -493,14 +493,14 @@
 (defn render
   "Renders the template with the data and, if supplied, partials."
   ([template]
-     (render template {} {}))
+   (render template {} {}))
   ([template data]
-     (render template data {}))
+   (render template data {}))
   ([template data partials]
-     (let [[template data] (preprocess template data partials)]
-       (replace-all (render-template template data partials true)
-                    [["\\\\\\{\\\\\\{" "{{"]
-                     ["\\\\\\}\\\\\\}" "}}"]]))))
+   (let [[template data] (preprocess template data partials)]
+     (replace-all (render-template template data partials true)
+                  [["\\\\\\{\\\\\\{" "{{"]
+                   ["\\\\\\}\\\\\\}" "}}"]]))))
 
 #?(:clj
    (defn render-resource

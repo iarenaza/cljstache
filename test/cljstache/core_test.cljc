@@ -53,8 +53,8 @@
 
 (deftest replace-all-test
   (testing "escape-html"
-   (is (= "&lt;html&gt;&amp;&quot;"
-          (#'cs/escape-html "<html>&\""))))
+    (is (= "&lt;html&gt;&amp;&quot;"
+           (#'cs/escape-html "<html>&\""))))
   (testing "indent-partial"
     (is (= "a\n-->b\n-->c\n-->d"
            (#'cs/indent-partial "a\nb\nc\nd" "-->"))))
@@ -63,7 +63,7 @@
            (#'cs/escape-regex "\\{}[]().?^+-|="))))
   (testing "unescape-regex"
     (is (= "{}[]().?^+-|=\\"
-         (#'cs/unescape-regex "\\{\\}\\[\\]\\(\\)\\.\\?\\^\\+\\-\\|=\\")))))
+           (#'cs/unescape-regex "\\{\\}\\[\\]\\(\\)\\.\\?\\^\\+\\-\\|=\\")))))
 
 (deftest stringbuilder-test
   (let [b (fn [] (#'cs/->stringbuilder "abcdef"))]
@@ -81,8 +81,6 @@
     (testing "sb-insert"
       (is (= "abc123def"
              (-> (b) (#'cs/sb-insert 3 "123") (#'cs/sb->str)))))))
-
-
 
 (deftest process-set-delimiters-test
   (testing "Correctly replaces custom delimiters"
@@ -145,14 +143,13 @@
                                                       {:name "Jenny"}])}))))
 
 (deftest test-render-hash
-  ; according to mustache(5) non-false, non-list value
-  ; should be used as a context for a single rendering of a block
+  ;; according to mustache(5) non-false, non-list value
+  ;; should be used as a context for a single rendering of a block
   (is (= "Hello, Felix!" (render "Hello{{#person}}, {{name}}{{/person}}!"
                                  {:person {:name "Felix"}}))))
 
 (deftest test-render-empty-list
   (is (= "" (render "{{#things}}Something{{/things}}" {:things []}))))
-
 
 (deftest test-render-nested-list
   (is (= "z" (render "{{#x}}{{#y}}{{z}}{{/y}}{{/x}}" {:x {:y {:z "z"}}}))))
@@ -175,7 +172,7 @@
 
 (deftest test-render-atomic-string
   (is (= "Hello, Atomic string" (render "Hello{{#string}}, {{string}}{{/string}}"
-                           {:string "Atomic string"}))))
+                                        {:string "Atomic string"}))))
 
 (deftest test-render-inverted-empty-list
   (is (= "Empty" (render "{{^things}}Empty{{/things}}" {:things []}))))
@@ -190,14 +187,11 @@
 (deftest test-render-inverted-boolean-false
   (is (= "Hello, Felix" (render "Hello, {{^condition}}Felix{{/condition}}"
                                 {:condition false}))))
-
 (deftest test-render-with-delimiters
   (is (= "Hello, Felix" (render "{{=<% %>=}}Hello, <%name%>" {:name "Felix"}))))
 
-
 (deftest test-render-with-regex-delimiters
   (is (= "Hello, Felix" (render "{{=[ ]=}}Hello, [name]" {:name "Felix"}))))
-
 
 (deftest test-render-with-delimiters-changed-twice
   (is (= "Hello, Felix" (render "{{=[ ]=}}[greeting], [=<% %>=]<%name%>"
@@ -258,11 +252,11 @@
 
 (deftest test-render-partial-recursive
   (is (= "One Two Three Four Five" (render "One {{>two}}"
-                                            {}
-                                            {:two "Two {{>three}}"
-                                             :three "Three {{>four}}"
-                                             :four "Four {{>five}}"
-                                             :five "Five"}))))
+                                           {}
+                                           {:two "Two {{>three}}"
+                                            :three "Three {{>four}}"
+                                            :four "Four {{>five}}"
+                                            :five "Five"}))))
 
 (deftest test-render-with-variable-containing-template
   (is (= "{{hello}},world" (render "{{tmpl}},{{hello}}" {:tmpl "{{hello}}" :hello "world"}))))
