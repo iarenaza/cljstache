@@ -11,7 +11,15 @@
 
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.11.0"]
                                   [org.clojure/data.json "2.4.0"]]
-                   :resource-paths ["test-resources"]}
+                   :resource-paths ["test-resources"]
+                   :plugins [[jonase/eastwood "1.2.3"]]
+                   :eastwood {:linters [:all]
+                              :exclude-linters [:boxed-math
+                                                :non-clojure-file]
+                              :ignored-faults {:unused-ret-vals {cljstache.core {:line 194}}
+                                               :unused-fn-args {cljstache.mustache-spec-test true}
+                                               :def-in-def {cljstache.mustache-spec-test true}}
+                              :debug [:progress :time]}}
              :1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}
              :1.8 {:dependencies [[org.clojure/clojure "1.8.0"]]}
              :1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}
