@@ -12,7 +12,8 @@
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.11.0"]
                                   [org.clojure/data.json "2.4.0"]]
                    :resource-paths ["test-resources"]
-                   :plugins [[jonase/eastwood "1.2.3"]]
+                   :plugins [[jonase/eastwood "1.2.3"]
+                             [lein-cljfmt "0.8.0"]]
                    :eastwood {:linters [:all]
                               :exclude-linters [:boxed-math
                                                 :non-clojure-file]
