@@ -15,8 +15,10 @@
    (def ^Boolean seqable?
      "Returns true if (seq x) will succeed, false otherwise.
       Included in clojure core from v1.9"
-     (when (-> "seqable?" symbol resolve)
-       seqable?
+     (if (-> "clojure.core/seqable?" symbol resolve)
+       (do
+         (require '[clojure.core :refer [seqable?]])
+         seqable?)
        (fn [x]
          (or (seq? x)
              (instance? clojure.lang.Seqable x)
