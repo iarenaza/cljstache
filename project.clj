@@ -36,6 +36,9 @@
             "test-clj" ["with-clj" "test"]
             "test-cljs" ["with-cljs" "doo" "nashorn" "test" "once"]
             "test-all" ["do" "clean," "test-clj," "test-cljs"]
+            "eastwood-clj" ["with-clj" "eastwood"]
+            ;; Do nothing "op", for TravisCI CI/CD pipeline
+            "eastwood-cljs" ["version"]
             "deploy" ["do" "clean," "deploy" "clojars"]}
 
   :jar-exclusions [#"\.swp|\.swo|\.DS_Store"]

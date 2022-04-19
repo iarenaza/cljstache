@@ -1,10 +1,12 @@
 language: clojure
 
-script: lein test-$CLJ
+script: ./clj-kondo --lint src --lint test && lein do "eastwood-${CLJ}", "test-${CLJ}"
 
 before_install:
   - git submodule update --init --recursive
   - yes | sudo lein upgrade
+  - wget "https://github.com/clj-kondo/clj-kondo/releases/download/v${CLJ_KONDO_RELEASE}/clj-kondo-${CLJ_KONDO_RELEASE}-linux-static-amd64.zip" -o clj-kondo.zip
+  - unzip clj-kondo.zip
 
 matrix:
   include:
