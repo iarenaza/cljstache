@@ -28,10 +28,10 @@
              (string? x)
              (instance? java.util.Map x))))))
 
-(defn- ^String map-str
+(defn- map-str
   "Apply f to each element of coll, concatenate all results into a
   String."
-  [f coll]
+  ^String [f coll]
   (apply str (map f coll)))
 
 ;; To match clj regex api
@@ -109,10 +109,10 @@
   (replace-all regex (map (fn [char] [(str "\\\\\\" char) char true])
                           regex-chars)))
 
-(defn- ^StringBuilder ->stringbuilder
-  ([] (->stringbuilder ""))
-  #?(:clj ([^String s] (StringBuilder. s)))
-  #?(:cljs ([s] (atom s))))
+(defn- ->stringbuilder
+  (^StringBuilder [] (->stringbuilder ""))
+  #?(:clj (^StringBuilder [^String s] (StringBuilder. s)))
+  #?(:cljs (^StringBuilder [s] (atom s))))
 
 #?(:cljs
    (defn- sb!
@@ -120,27 +120,27 @@
      [s f]
      (swap! s f) s))
 
-(defn- ^String sb->str [^StringBuilder s]
+(defn- sb->str ^String [^StringBuilder s]
   #?(:clj (.toString s))
   #?(:cljs @s))
 
-(defn- ^StringBuilder sb-replace
-  [^StringBuilder s ^Integer start ^Integer end ^String s']
+(defn- sb-replace
+  ^StringBuilder [^StringBuilder s ^Integer start ^Integer end ^String s']
   #?(:clj (.replace s start end s'))
   #?(:cljs (sb! s #(str (subs % 0 start) s' (subs % end)))))
 
-(defn- ^StringBuilder sb-delete
-  [^StringBuilder s ^Integer start ^Integer end]
+(defn- sb-delete
+  ^StringBuilder [^StringBuilder s ^Integer start ^Integer end]
   #?(:clj (.delete s start end))
   #?(:cljs (sb! s #(str (subs % 0 start) (subs % end)))))
 
-(defn- ^StringBuilder sb-append
-  [^StringBuilder s s']
+(defn- sb-append
+  ^StringBuilder [^StringBuilder s s']
   #?(:clj (.append s s'))
   #?(:cljs (sb! s #(str % s'))))
 
-(defn- ^StringBuilder sb-insert
-  [^StringBuilder s ^Integer index ^StringBuilder s']
+(defn- sb-insert
+  ^StringBuilder [^StringBuilder s ^Integer index ^StringBuilder s']
   #?(:clj (.insert s index s'))
   #?(:cljs (sb-replace s index index s')))
 
